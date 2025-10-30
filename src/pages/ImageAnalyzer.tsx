@@ -16,47 +16,55 @@ const ImageAnalyzer = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImagePreview(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-
     setIsProcessing(true);
 
-    // Simulate OCR processing
-    await new Promise(resolve => setTimeout(resolve, 2500));
+    try {
+      // Create preview and base64 data
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const imageData = e.target?.result as string;
+        setImagePreview(imageData);
 
-    const mockOCR = `Chapter 5: Sustainable Education
+        // Call edge function for real AI OCR
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-image`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ imageData }),
+          }
+        );
 
-The Role of Technology in Education
+        if (!response.ok) {
+          throw new Error("Image analysis failed");
+        }
 
-Educational technology has revolutionized the way we approach learning and teaching. Digital platforms provide unprecedented access to knowledge and resources.
-
-Key Benefits:
-1. Enhanced accessibility for remote learners
-2. Personalized learning experiences
-3. Real-time feedback and assessment
-4. Collaborative learning opportunities
-
-"Education is the most powerful weapon which you can use to change the world." - Nelson Mandela
-
-Implementation Strategies:
-• Integrate technology gradually
-• Provide adequate training for educators
-• Ensure equitable access to resources
-• Monitor and evaluate effectiveness
-
-The future of education lies in our ability to leverage technology while maintaining the human elements that make learning meaningful and transformative.`;
-
-    setExtractedText(mockOCR);
-    setIsProcessing(false);
-    
-    toast({
-      title: "Analysis complete",
-      description: "Text extracted from image successfully",
-    });
+        const data = await response.json();
+        setExtractedText(data.extractedText);
+        
+        toast({
+          title: "Analysis complete",
+          description: "Text extracted from image successfully",
+        });
+      };
+      
+      reader.onerror = () => {
+        throw new Error("Failed to read image file");
+      };
+      
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("Image analysis error:", error);
+      toast({
+        title: "Analysis failed",
+        description: "Please try again with a different image",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (

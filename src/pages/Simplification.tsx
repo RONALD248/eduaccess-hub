@@ -22,21 +22,42 @@ const Simplification = () => {
     const textToSimplify = sourceText || sampleText;
     setIsProcessing(true);
     
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const simplifications = [
-      "Using complete education systems means combining teaching methods with modern technology. This helps different types of students learn better and develop their thinking skills.",
-      "Implementing comprehensive educational frameworks requires integrating teaching methods with modern technology infrastructure. This enables better learning and cognitive development for diverse students.",
-      "The implementation of comprehensive educational frameworks necessitates integrating pedagogical methodologies with contemporary technology, facilitating enhanced knowledge acquisition among diverse student populations.",
-    ];
-    
-    setSimplifiedText(simplifications[level[0] - 1]);
-    setIsProcessing(false);
-    
-    toast({
-      title: "Simplification complete",
-      description: `Simplified to ${levelNames[level[0] - 1]} level`,
-    });
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/simplify-text`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: textToSimplify,
+            level: level[0],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Simplification failed");
+      }
+
+      const data = await response.json();
+      setSimplifiedText(data.simplifiedText);
+      
+      toast({
+        title: "Simplification complete",
+        description: `Simplified to ${levelNames[level[0] - 1]} level`,
+      });
+    } catch (error) {
+      console.error("Simplification error:", error);
+      toast({
+        title: "Simplification failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (

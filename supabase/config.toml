@@ -1,0 +1,10 @@
+project_id = "jhqyxkcgthcnbdqdjlqv"
+
+[functions.translate]
+verify_jwt = false
+
+[functions.simplify-text]
+verify_jwt = false
+
+[functions.analyze-image]
+verify_jwt = false

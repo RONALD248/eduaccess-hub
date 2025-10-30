@@ -25,6 +25,7 @@ const Translation = () => {
     { code: "ko", name: "Korean", flag: "🇰🇷" },
     { code: "ar", name: "Arabic", flag: "🇸🇦" },
     { code: "hi", name: "Hindi", flag: "🇮🇳" },
+    { code: "sw", name: "Swahili", flag: "🇹🇿" },
   ];
 
   const sampleText = "Education is the most powerful weapon which you can use to change the world. Quality education ensures inclusive and equitable learning opportunities for all.";
@@ -33,22 +34,42 @@ const Translation = () => {
     const textToTranslate = sourceText || sampleText;
     setIsTranslating(true);
     
-    // Simulate translation (in production, this would call a translation API)
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const mockTranslations: Record<string, string> = {
-      es: "La educación es el arma más poderosa que puedes usar para cambiar el mundo. La educación de calidad garantiza oportunidades de aprendizaje inclusivas y equitativas para todos.",
-      fr: "L'éducation est l'arme la plus puissante que vous puissiez utiliser pour changer le monde. Une éducation de qualité garantit des opportunités d'apprentissage inclusives et équitables pour tous.",
-      de: "Bildung ist die mächtigste Waffe, die Sie verwenden können, um die Welt zu verändern. Hochwertige Bildung gewährleistet inklusive und gerechte Lernmöglichkeiten für alle.",
-    };
-    
-    setTranslatedText(mockTranslations[targetLang] || textToTranslate);
-    setIsTranslating(false);
-    
-    toast({
-      title: "Translation complete",
-      description: `Translated to ${languages.find(l => l.code === targetLang)?.name}`,
-    });
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/translate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: textToTranslate,
+            targetLang,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Translation failed");
+      }
+
+      const data = await response.json();
+      setTranslatedText(data.translatedText);
+      
+      toast({
+        title: "Translation complete",
+        description: `Translated to ${languages.find(l => l.code === targetLang)?.name}`,
+      });
+    } catch (error) {
+      console.error("Translation error:", error);
+      toast({
+        title: "Translation failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsTranslating(false);
+    }
   };
 
   return (

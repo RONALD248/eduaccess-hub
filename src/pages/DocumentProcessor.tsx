@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import * as pdfjsLib from 'pdfjs-dist';
 
 const DocumentProcessor = () => {
   const navigate = useNavigate();
@@ -12,6 +13,26 @@ const DocumentProcessor = () => {
   const [fileName, setFileName] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Set up PDF.js worker
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+  const extractTextFromPDF = async (file: File): Promise<string> => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = '';
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item: any) => item.str)
+        .join(' ');
+      fullText += pageText + '\n\n';
+    }
+
+    return fullText;
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -19,31 +40,37 @@ const DocumentProcessor = () => {
     setFileName(file.name);
     setIsProcessing(true);
 
-    // Simulate processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      let text = '';
 
-    const mockText = `Education and Sustainable Development
+      if (file.type === 'application/pdf') {
+        // Real PDF extraction using PDF.js
+        text = await extractTextFromPDF(file);
+      } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+        // Plain text file
+        text = await file.text();
+      } else {
+        // For other formats, read as text (works for many text-based formats)
+        text = await file.text();
+      }
 
-This document explores the critical relationship between quality education and sustainable development goals. Education serves as a fundamental catalyst for social progress and economic development.
-
-Key Points:
-• Universal access to education is essential for achieving SDG 4
-• Quality education empowers individuals and communities
-• Educational technology bridges gaps in access and opportunity
-• Inclusive education addresses diverse learning needs
-
-The implementation of comprehensive educational frameworks requires systematic integration of pedagogical methodologies with contemporary technological infrastructure. This approach facilitates enhanced knowledge acquisition and cognitive development among diverse student populations.
-
-Conclusion:
-Education remains the cornerstone of sustainable development, enabling societies to address complex challenges and build more equitable futures.`;
-
-    setExtractedText(mockText);
-    setIsProcessing(false);
-    
-    toast({
-      title: "Processing complete",
-      description: `Extracted text from ${file.name}`,
-    });
+      setExtractedText(text);
+      
+      toast({
+        title: "Processing complete",
+        description: `Extracted ${text.split(/\s+/).length} words from ${file.name}`,
+      });
+    } catch (error) {
+      console.error("Document processing error:", error);
+      toast({
+        title: "Processing failed",
+        description: "Could not extract text from this file",
+        variant: "destructive",
+      });
+      setExtractedText('');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
