@@ -1,6 +1,10 @@
-import { GraduationCap, Heart, Globe } from "lucide-react";
+import { GraduationCap, Heart, Globe, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <footer className="bg-card border-t border-border py-12 px-4">
       <div className="container mx-auto max-w-7xl">
@@ -13,9 +17,18 @@ export const Footer = () => {
               </div>
               <span className="font-bold text-xl">EduAccess Hub</span>
             </div>
-            <p className="text-muted-foreground text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed mb-4">
               Making education accessible for everyone, supporting UN Sustainable Development Goal 4.
             </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/install")}
+              className="gap-2"
+            >
+              <Download size={16} />
+              Install App
+            </Button>
           </div>
 
           {/* Mission */}
