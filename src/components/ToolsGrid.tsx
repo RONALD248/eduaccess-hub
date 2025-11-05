@@ -1,4 +1,4 @@
-import { Volume2, Globe, FileText, Mic, File, Image, BarChart3 } from "lucide-react";
+import { Volume2, Globe, FileText, Mic, File, Image, BarChart3, MessageCircle } from "lucide-react";
 import { ToolCard } from "./ToolCard";
 
 export const ToolsGrid = () => {
@@ -58,6 +58,13 @@ export const ToolsGrid = () => {
       color: "primary",
       path: "/readability",
     },
+    {
+      icon: MessageCircle,
+      title: "AI Assistant",
+      description: "Chat with an intelligent AI assistant for educational help and instant answers.",
+      color: "accent",
+      path: "/ai-chatbot",
+    },
   ];
 
   return (
@@ -90,7 +97,7 @@ export const ToolsGrid = () => {
         <div className="mt-20 bg-card rounded-2xl p-8 shadow-elegant border border-border animate-fade-in-up">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold text-primary mb-2">7+</div>
+              <div className="text-4xl font-bold text-primary mb-2">8+</div>
               <p className="text-muted-foreground">Accessibility Tools</p>
             </div>
             <div>

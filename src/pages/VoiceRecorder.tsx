@@ -12,12 +12,26 @@ const VoiceRecorder = () => {
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
 
-  const startRecording = () => {
+  const startRecording = async () => {
+    // Check for browser support
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       toast({
         variant: "destructive",
         title: "Not supported",
-        description: "Speech recognition is not supported in your browser",
+        description: "Speech recognition is not supported in your browser. Try Chrome or Safari.",
+      });
+      return;
+    }
+
+    // Request microphone permission first (especially important for mobile)
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track => track.stop()); // Stop the stream immediately
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Microphone access denied",
+        description: "Please allow microphone access to use voice recording",
       });
       return;
     }
@@ -28,6 +42,9 @@ const VoiceRecorder = () => {
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = 'en-US';
+    
+    // Mobile-specific settings
+    recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
       setIsRecording(true);
@@ -54,6 +71,21 @@ const VoiceRecorder = () => {
 
     recognition.onerror = (event: any) => {
       console.error('Speech recognition error:', event.error);
+      
+      let errorMessage = "An error occurred during recording";
+      if (event.error === 'no-speech') {
+        errorMessage = "No speech detected. Please try again.";
+      } else if (event.error === 'audio-capture') {
+        errorMessage = "Microphone not found or accessible";
+      } else if (event.error === 'not-allowed') {
+        errorMessage = "Microphone permission denied";
+      }
+      
+      toast({
+        variant: "destructive",
+        title: "Recording error",
+        description: errorMessage,
+      });
       setIsRecording(false);
     };
 
@@ -62,7 +94,18 @@ const VoiceRecorder = () => {
     };
 
     recognitionRef.current = recognition;
-    recognition.start();
+    
+    try {
+      recognition.start();
+    } catch (error) {
+      console.error('Failed to start recognition:', error);
+      toast({
+        variant: "destructive",
+        title: "Failed to start recording",
+        description: "Please try again",
+      });
+      setIsRecording(false);
+    }
   };
 
   const stopRecording = () => {

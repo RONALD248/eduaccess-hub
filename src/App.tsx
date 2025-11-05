@@ -11,6 +11,7 @@ import VoiceRecorder from "./pages/VoiceRecorder";
 import DocumentProcessor from "./pages/DocumentProcessor";
 import ImageAnalyzer from "./pages/ImageAnalyzer";
 import Readability from "./pages/Readability";
+import AIChatbot from "./pages/AIChatbot";
 import InstallApp from "./pages/InstallApp";
 import NotFound from "./pages/NotFound";
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/document-processor" element={<DocumentProcessor />} />
           <Route path="/image-analyzer" element={<ImageAnalyzer />} />
           <Route path="/readability" element={<Readability />} />
+          <Route path="/ai-chatbot" element={<AIChatbot />} />
           <Route path="/install" element={<InstallApp />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

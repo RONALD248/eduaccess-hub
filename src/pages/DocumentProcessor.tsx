@@ -44,27 +44,57 @@ const DocumentProcessor = () => {
       let text = '';
 
       if (file.type === 'application/pdf') {
-        // Real PDF extraction using PDF.js
-        text = await extractTextFromPDF(file);
+        try {
+          // Real PDF extraction using PDF.js
+          text = await extractTextFromPDF(file);
+          
+          if (!text || text.trim().length === 0) {
+            throw new Error("No text could be extracted from this PDF");
+          }
+        } catch (pdfError) {
+          console.error("PDF extraction error:", pdfError);
+          throw new Error("Failed to extract text from PDF. The file may be scanned or image-based.");
+        }
       } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
         // Plain text file
         text = await file.text();
+      } else if (
+        file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+        file.name.endsWith('.docx')
+      ) {
+        // For Word documents, inform user about limitations
+        toast({
+          title: "Word document detected",
+          description: "Please convert to PDF for best results",
+          variant: "destructive",
+        });
+        setIsProcessing(false);
+        return;
       } else {
-        // For other formats, read as text (works for many text-based formats)
-        text = await file.text();
+        // For other formats, try to read as text
+        try {
+          text = await file.text();
+        } catch {
+          throw new Error("Unsupported file format. Please use PDF or TXT files.");
+        }
+      }
+
+      if (!text || text.trim().length === 0) {
+        throw new Error("No text found in the document");
       }
 
       setExtractedText(text);
       
+      const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
       toast({
         title: "Processing complete",
-        description: `Extracted ${text.split(/\s+/).length} words from ${file.name}`,
+        description: `Extracted ${wordCount} words from ${file.name}`,
       });
     } catch (error) {
       console.error("Document processing error:", error);
       toast({
         title: "Processing failed",
-        description: "Could not extract text from this file",
+        description: error instanceof Error ? error.message : "Could not extract text from this file",
         variant: "destructive",
       });
       setExtractedText('');
