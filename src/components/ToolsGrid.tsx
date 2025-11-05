@@ -71,12 +71,12 @@ export const ToolsGrid = () => {
     <section id="tools" className="py-20 px-4">
       <div className="container mx-auto max-w-7xl">
         {/* Section header */}
-        <div className="text-center mb-16 animate-fade-in-up">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
+        <div className="text-center mb-20 animate-fade-in-up">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 font-heading bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
             Accessibility Tools
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Comprehensive suite of tools to transform educational content into accessible formats
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Comprehensive suite of AI-powered tools to transform educational content into accessible formats
           </p>
         </div>
 
@@ -93,20 +93,27 @@ export const ToolsGrid = () => {
           ))}
         </div>
 
-        {/* Additional info */}
-        <div className="mt-20 bg-card rounded-2xl p-8 shadow-elegant border border-border animate-fade-in-up">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-primary mb-2">8+</div>
-              <p className="text-muted-foreground">Accessibility Tools</p>
+        {/* Additional info with gradient cards */}
+        <div className="mt-24 grid md:grid-cols-3 gap-6 animate-fade-in-up">
+          <div className="relative group overflow-hidden rounded-3xl p-8 text-center shadow-lg hover-lift border-2 border-border">
+            <div className="absolute inset-0 gradient-primary opacity-10 group-hover:opacity-20 transition-opacity" />
+            <div className="relative">
+              <div className="text-5xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-heading">8+</div>
+              <p className="text-muted-foreground font-medium">Accessibility Tools</p>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-accent mb-2">15+</div>
-              <p className="text-muted-foreground">Supported Languages</p>
+          </div>
+          <div className="relative group overflow-hidden rounded-3xl p-8 text-center shadow-lg hover-lift border-2 border-border">
+            <div className="absolute inset-0 gradient-secondary opacity-10 group-hover:opacity-20 transition-opacity" />
+            <div className="relative">
+              <div className="text-5xl font-bold mb-3 bg-gradient-to-r from-secondary to-secondary/70 bg-clip-text text-transparent font-heading">15+</div>
+              <p className="text-muted-foreground font-medium">Supported Languages</p>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-secondary mb-2">100%</div>
-              <p className="text-muted-foreground">WCAG 2.1 Compliant</p>
+          </div>
+          <div className="relative group overflow-hidden rounded-3xl p-8 text-center shadow-lg hover-lift border-2 border-border">
+            <div className="absolute inset-0 gradient-accent opacity-10 group-hover:opacity-20 transition-opacity" />
+            <div className="relative">
+              <div className="text-5xl font-bold mb-3 bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent font-heading">100%</div>
+              <p className="text-muted-foreground font-medium">WCAG 2.1 Compliant</p>
             </div>
           </div>
         </div>

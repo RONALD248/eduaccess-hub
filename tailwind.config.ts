@@ -67,7 +67,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+        heading: ['Space Grotesk', 'Poppins', 'sans-serif'],
       },
       keyframes: {
         "accordion-down": {
@@ -113,9 +114,25 @@ export default {
           },
           "100%": {
             opacity: "1",
-            transform: "scale(1)",
-          },
+          transform: "scale(1)",
         },
+      },
+      "shimmer": {
+        "0%": {
+          backgroundPosition: "-1000px 0",
+        },
+        "100%": {
+          backgroundPosition: "1000px 0",
+        },
+      },
+      "glow": {
+        "0%, 100%": {
+          opacity: "1",
+        },
+        "50%": {
+          opacity: "0.5",
+        },
+      },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -123,6 +140,8 @@ export default {
         "fade-in-up": "fade-in-up 0.6s ease-out",
         "slide-in-right": "slide-in-right 0.5s ease-out",
         "scale-in": "scale-in 0.4s ease-out",
+        "shimmer": "shimmer 2s linear infinite",
+        "glow": "glow 2s ease-in-out infinite",
       },
     },
   },

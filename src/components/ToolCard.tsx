@@ -15,52 +15,73 @@ export const ToolCard = ({ icon: Icon, title, description, color, path }: ToolCa
   const navigate = useNavigate();
 
   const colorClasses = {
-    primary: "text-primary hover:bg-primary/5 border-primary/20",
-    secondary: "text-secondary hover:bg-secondary/5 border-secondary/20",
-    accent: "text-accent hover:bg-accent/5 border-accent/20",
+    primary: "hover:border-primary/50 group-hover:shadow-[0_0_30px_-5px] group-hover:shadow-primary/30",
+    secondary: "hover:border-secondary/50 group-hover:shadow-[0_0_30px_-5px] group-hover:shadow-secondary/30",
+    accent: "hover:border-accent/50 group-hover:shadow-[0_0_30px_-5px] group-hover:shadow-accent/30",
   };
 
   const iconBgClasses = {
-    primary: "bg-primary/10",
-    secondary: "bg-secondary/10",
-    accent: "bg-accent/10",
+    primary: "bg-gradient-to-br from-primary to-primary/70",
+    secondary: "bg-gradient-to-br from-secondary to-secondary/70",
+    accent: "bg-gradient-to-br from-accent to-accent/70",
   };
 
   return (
     <div className={cn(
-      "group bg-card rounded-2xl p-6 border-2 transition-smooth hover:scale-105 shadow-md hover:shadow-elegant cursor-pointer",
+      "group relative bg-card rounded-3xl p-8 border-2 border-border transition-all duration-500 hover:-translate-y-3 cursor-pointer overflow-hidden shadow-lg",
       colorClasses[color]
     )}
     onClick={() => navigate(path)}
     >
-      {/* Icon */}
+      {/* Gradient overlay on hover */}
       <div className={cn(
-        "w-16 h-16 rounded-xl flex items-center justify-center mb-4 transition-smooth group-hover:scale-110",
+        "absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500",
+        color === "primary" && "gradient-primary",
+        color === "secondary" && "gradient-secondary",
+        color === "accent" && "gradient-accent"
+      )} />
+
+      {/* Icon with gradient background */}
+      <div className={cn(
+        "relative w-20 h-20 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-lg",
         iconBgClasses[color]
       )}>
-        <Icon size={32} className={cn("transition-smooth", color === "primary" ? "text-primary" : color === "secondary" ? "text-secondary" : "text-accent")} />
+        <Icon size={40} className="text-white drop-shadow-lg" />
+        
+        {/* Glow effect */}
+        <div className={cn(
+          "absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500",
+          iconBgClasses[color]
+        )} />
       </div>
 
       {/* Content */}
-      <h3 className="text-xl font-semibold mb-2 text-card-foreground">
+      <h3 className="text-2xl font-bold mb-3 text-card-foreground font-heading group-hover:text-primary transition-colors duration-300">
         {title}
       </h3>
-      <p className="text-muted-foreground mb-4 leading-relaxed">
+      <p className="text-muted-foreground mb-6 leading-relaxed text-base">
         {description}
       </p>
 
-      {/* CTA */}
-      <Button 
-        variant="ghost" 
-        className={cn(
-          "w-full justify-center font-medium transition-smooth",
-          color === "primary" && "hover:bg-primary/10 hover:text-primary",
-          color === "secondary" && "hover:bg-secondary/10 hover:text-secondary",
-          color === "accent" && "hover:bg-accent/10 hover:text-accent"
-        )}
-      >
-        Try Tool →
-      </Button>
+      {/* CTA with animated arrow */}
+      <div className="flex items-center gap-2 font-semibold text-sm group-hover:gap-4 transition-all duration-300">
+        <span className={cn(
+          "transition-colors duration-300",
+          color === "primary" && "text-primary",
+          color === "secondary" && "text-secondary",
+          color === "accent" && "text-accent"
+        )}>
+          Try Tool
+        </span>
+        <span className={cn(
+          "transition-all duration-300 group-hover:translate-x-1",
+          color === "primary" && "text-primary",
+          color === "secondary" && "text-secondary",
+          color === "accent" && "text-accent"
+        )}>
+          →
+        </span>
+      </div>
     </div>
   );
 };
