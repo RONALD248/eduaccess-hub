@@ -13,8 +13,8 @@
 
 ## 🚀 Live Demo
 
-🔗 **Live Application**: [Your Deployment Link Here]
-📱 **PWA**: Installable as a native app on all devices
+🔗 **Live Application**: (https://ronald-omollo-edu-hub.vercel.app/)
+
 
 ## ✨ Features
 
@@ -37,6 +37,9 @@
 - **PDF Text Extraction** using PDF.js
 - **Image OCR** with Tesseract.js for textbook pages and whiteboards
 - **Multiple Format Support** (PDF, DOC, TXT, Images)
+
+ ### AI Assistant.  
+ -Have an AI Chatbot that that helps learners in the areas of their difficulties in their learning environments.
 
 ### 🎨 Accessibility Features
 - **Multiple Themes**: Light, Dark, and High Contrast modes
@@ -86,7 +89,7 @@
 ### Quick Start
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/eduaccess-hub.git
+   git clone https://github.com/RONALD248/eduaccess-hub.git
    cd eduaccess-hub
    ```
 
@@ -217,6 +220,13 @@ EduAccess Hub directly supports **UN Sustainable Development Goal 4** by:
 - File validation and size limits
 - Progress tracking
 
+### Readability Analysis
+- Give us the time need to read the specific amount of text.
+- Analyses some texts and gives the properties of it including:
+    - Number of words.
+    - Number of paragraph.
+    - The number of sentences.
+
 ## 🔒 Privacy & Security
 
 - **No data sent to external servers** (all processing happens locally)
@@ -256,7 +266,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Developer**: Ronald Omollo
 - **Email**: collincesronald@gmail.com
-- **Issue Tracker**: [GitHub Issues](https://github.com/yourusername/eduaccess-hub/issues)
+- **Issue Tracker**: [GitHub Issues](https://github.com/RONALD248/eduaccess-hub/issues)
+- **Tel Number**: 0715920019
 
 ## 🌟 Star History
 
